@@ -35,8 +35,8 @@ int read_line(int fd, char *str) {
         }
 
         remaining = read(fd, buffer, BUFF_SIZE);
-        if(remaining == 0) {
-            return 0;
+        if(remaining <= 0) {
+            return remaining;
         }
         ptr = buffer;
     }
@@ -111,7 +111,10 @@ int main() {
                     fprintf(stderr, "received: %s\n", str);
                 }
 
-                if (read == 0 || strcmp(str, "exit") == 0) {
+                if (read <= 0  || strcmp(str, "exit") == 0) {
+                    if(read < 0) {
+                        perror("error");
+                    }
                     fprintf(stderr, "exiting...\n");
                     break;
                 }
